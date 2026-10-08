@@ -1,0 +1,512 @@
+/*
+ * Estilos estructurales de LinkedIn AI Poster — compartidos por los dos
+ * temas (theme_claro.css / theme_oscuro.css definen SOLO los colores como
+ * variables CSS; este archivo los USA). Para cambiar un color, edita el
+ * archivo de tema correspondiente. Para cambiar tamaños, espaciados,
+ * bordes o el layout de un componente, edita este archivo.
+ *
+ * Ambos se leen desde disco en cada ejecución de app.py (ver _inject_css),
+ * así que un cambio guardado aquí se aplica en la siguiente interacción
+ * con la app, sin reiniciar el servidor.
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+/* ---------- Base ---------- */
+
+html, body, .stApp {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+}
+
+::selection { background: var(--accent-soft-border); }
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 8px; }
+
+a, .stApp a { color: var(--accent); }
+
+[data-testid="stImage"] img { border-radius: 14px; }
+
+/* Franja superior de Streamlit (detrás del botón de expandir barra lateral
+   cuando está colapsada) — sin esto se queda con el fondo claro por
+   defecto de Streamlit pase lo que pase, así que con el tema oscuro
+   activo se veía una franja clara a todo lo ancho, arriba del todo, muy
+   llamativa (sobre todo en móvil, donde la barra empieza colapsada). En
+   claro apenas se notaba porque el valor por defecto ya es un blanco/gris
+   parecido al de --bg — por eso pasó desapercibido hasta ahora. */
+[data-testid="stHeader"] { background: var(--bg) !important; }
+
+/* Oculta el toolbar "Deploy"/menú de Streamlit — es una app 100% local,
+   ese botón no aplica y solo confunde (ver también .streamlit/config.toml,
+   toolbarMode="minimal", que es la forma primaria de ocultarlo). Esta regla
+   es una red de seguridad por si esa opción no está disponible. */
+[data-testid="stAppDeployButton"], [data-testid="stMainMenuButton"] { display: none !important; }
+
+/* ---------- Tipografía general ---------- */
+
+.stApp h1, .stApp h2, .stApp h3, .stApp h4, .stApp h5, .stApp h6,
+.stApp p, .stApp label, .stApp span, .stApp div, .stApp li {
+    color: var(--text);
+}
+.stCaption, [data-testid="stCaptionContainer"], [data-testid="stCaptionContainer"] * {
+    color: var(--text-muted) !important;
+}
+
+code, .stApp code {
+    background: var(--code-bg) !important;
+    color: var(--code-text) !important;
+    border-radius: 5px;
+    padding: 0.1em 0.4em;
+    font-size: 0.85em;
+}
+
+/* ---------- Barra lateral ---------- */
+
+[data-testid="stSidebar"] { background: var(--bg3); border-right: 1px solid var(--border); }
+[data-testid="stSidebar"] * { color: var(--text); }
+[data-testid="stSidebarHeader"] { padding-bottom: 0; }
+
+/* El usuario pidió que la barra sea desplegable/ocultable (ya lo es, con
+   la flecha «) pero de ancho FIJO, no redimensionable arrastrando el
+   borde. El div que realmente escucha el arrastre es el contenedor sin
+   testid que envuelve a stSidebarResizeHandle (position:absolute,
+   cursor:col-resize) — desactivar solo el hijo no bastaba, había que
+   desactivar también ese envoltorio con :has(). Además se fija el ancho
+   de la barra con !important por si el usuario ya la había arrastrado
+   antes de instalar esta versión (Streamlit guarda el ancho arrastrado
+   como estilo inline en el propio elemento).
+
+   IMPORTANTE: estas reglas solo aplican con [aria-expanded="true"]. La
+   propia hoja de estilos de Streamlit colapsa la barra a 0px de ancho
+   con su propia regla !important cuando [aria-expanded="false"] — si
+   nuestro ancho fijo aplicara siempre (sin el filtro de aria-expanded),
+   ganaría también en ese estado (misma especificidad, pero la nuestra se
+   inyecta después) y bloquearía el colapso real: la barra se quedaba
+   visualmente a los 300px de siempre, el contenido principal nunca
+   recuperaba el espacio, y el botón de "expandir" (que Streamlit coloca
+   en flujo normal justo a la derecha de la barra, no con posición fija)
+   terminaba flotando a mitad de la pantalla en vez de pegado al borde
+   izquierdo — el bug exacto reportado ("se queda el botón flotando donde
+   se despliega, no donde se guarda"). Confirmado comparando contra un
+   Streamlit sin CSS propio: ahí sí colapsa a 0px y el botón aparece en
+   x≈18px, pegado a la izquierda. */
+[data-testid="stSidebar"][aria-expanded="true"] {
+    width: 300px !important;
+    min-width: 300px !important;
+    max-width: 300px !important;
+}
+[data-testid="stSidebar"][aria-expanded="true"] [data-testid="stSidebarResizeHandle"],
+[data-testid="stSidebar"][aria-expanded="true"] div:has(> [data-testid="stSidebarResizeHandle"]) {
+    pointer-events: none !important;
+    cursor: default !important;
+}
+
+.sidebar-brand {
+    display: flex; align-items: center; gap: 10px;
+    padding: 4px 0 16px 0; margin-bottom: 4px;
+    border-bottom: 1px solid var(--border);
+}
+.sidebar-brand .sidebar-brand-icon {
+    width: 34px; height: 34px; border-radius: 10px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.05rem; flex-shrink: 0; overflow: hidden;
+    box-shadow: 0 4px 10px var(--shadow);
+}
+.sidebar-brand .sidebar-brand-icon .sidebar-logo-img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+}
+.sidebar-brand .sidebar-brand-text { line-height: 1.15; }
+.sidebar-brand .sidebar-brand-title { font-weight: 800; font-size: 0.95rem; color: var(--text) !important; }
+.sidebar-brand .sidebar-brand-sub { font-size: 0.72rem; color: var(--text-muted) !important; }
+
+/* ---------- Tarjetas (st.container(border=True)) ---------- */
+
+[data-testid="stVerticalBlockBorderWrapper"] {
+    background: var(--bg2);
+    border-color: var(--border) !important;
+    border-radius: 14px !important;
+}
+hr, [data-testid="stDivider"] { border-color: var(--border) !important; }
+
+/* ---------- Inputs ---------- */
+
+div[data-testid="stTextInput"] input,
+div[data-testid="stTextArea"] textarea,
+div[data-testid="stNumberInput"] input,
+[data-baseweb="select"] > div,
+[data-baseweb="input"],
+[data-baseweb="base-input"] {
+    background: var(--bg2) !important;
+    color: var(--text) !important;
+    border-color: var(--border) !important;
+}
+div[data-testid="stTextInput"] input::placeholder,
+div[data-testid="stTextArea"] textarea::placeholder {
+    color: var(--text-muted) !important;
+    opacity: 0.75;
+}
+div[data-testid="stNumberInputStepUp"], div[data-testid="stNumberInputStepDown"] {
+    background: var(--bg2) !important;
+}
+div[data-testid="stNumberInputStepUp"] svg, div[data-testid="stNumberInputStepDown"] svg {
+    fill: var(--text) !important;
+}
+
+/* Menús desplegables (selectbox / multiselect) — se renderizan en un
+   "portal" fuera de .stApp, por eso se seleccionan sin ese prefijo. */
+[data-baseweb="popover"] [data-baseweb="menu"],
+[data-baseweb="popover"] ul[role="listbox"] {
+    background: var(--bg-elevated) !important;
+    border: 1px solid var(--border) !important;
+}
+[data-baseweb="popover"] li,
+[data-baseweb="popover"] li *,
+[data-baseweb="menu"] li,
+[data-baseweb="menu"] li * {
+    color: var(--text) !important;
+}
+[data-baseweb="popover"] li[aria-selected="true"] {
+    background: var(--accent-soft) !important;
+}
+[data-baseweb="tag"] { background: var(--accent-soft) !important; color: var(--text) !important; }
+
+/* Casillas/interruptores (checkbox y toggle comparten testid, se
+   distinguen por role="switch") */
+[data-testid="stCheckbox"] input:checked + div,
+[data-testid="stCheckbox"] [data-selected="true"] > div:first-of-type {
+    background: var(--accent) !important;
+}
+
+/* File uploader */
+[data-testid="stFileUploaderDropzone"] {
+    background: var(--bg2) !important;
+    border-color: var(--border) !important;
+}
+[data-testid="stFileUploaderDropzoneInstructions"] * { color: var(--text-muted) !important; }
+
+/* ---------- Botones ---------- */
+
+/* El texto del botón vive en un <p> anidado dentro de varios <div>/<span>
+   (stMarkdownContainer). La regla general ".stApp p { color: var(--text) }"
+   de más arriba apunta DIRECTAMENTE a ese <p>, así que gana sobre el color
+   heredado del botón aunque el botón tenga !important — un color heredado
+   siempre pierde frente a cualquier regla explícita sobre el propio
+   elemento. Por eso hay que apuntar también a los descendientes del botón
+   (el "*") y no solo al botón en sí. */
+button[kind="primary"], button[kind="primaryFormSubmit"],
+[data-testid="stBaseButton-primary"], [data-testid="stBaseButton-primaryFormSubmit"] {
+    background: var(--accent) !important;
+    color: var(--text-on-accent) !important;
+    border-color: var(--accent) !important;
+    font-weight: 600 !important;
+}
+button[kind="primary"] *, button[kind="primaryFormSubmit"] *,
+[data-testid="stBaseButton-primary"] *, [data-testid="stBaseButton-primaryFormSubmit"] * {
+    color: var(--text-on-accent) !important;
+}
+button[kind="secondary"], button[kind="secondaryFormSubmit"],
+[data-testid="stBaseButton-secondary"], [data-testid="stBaseButton-secondaryFormSubmit"] {
+    background: var(--bg2) !important;
+    color: var(--text) !important;
+    border-color: var(--border-strong) !important;
+}
+button[kind="secondary"] *, button[kind="secondaryFormSubmit"] *,
+[data-testid="stBaseButton-secondary"] *, [data-testid="stBaseButton-secondaryFormSubmit"] * {
+    color: var(--text) !important;
+}
+button[disabled], button[kind="primary"][disabled], button[kind="secondary"][disabled] {
+    opacity: 0.45 !important;
+}
+a[data-testid="stBaseLinkButton-primary"] {
+    background: var(--accent) !important;
+    color: var(--text-on-accent) !important;
+    border-color: var(--accent) !important;
+}
+a[data-testid="stBaseLinkButton-primary"] * {
+    color: var(--text-on-accent) !important;
+}
+
+/* ---------- Botón de expandir la barra lateral colapsada ---------- */
+
+/* Streamlit lo coloca en flujo normal, pegado al borde izquierdo, como
+   texto plano sin ningún fondo — poco visible como elemento pulsable,
+   sobre todo en móvil. Se le da la misma forma de "chip" que el resto de
+   controles de la app. */
+[data-testid="stExpandSidebarButton"] {
+    background: var(--bg2) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 10px !important;
+    margin: 6px 0 0 6px !important;
+}
+[data-testid="stExpandSidebarButton"]:hover {
+    background: var(--accent-soft) !important;
+    border-color: var(--accent-soft-border) !important;
+}
+
+/* ---------- Segmented control (navegación, modo de generación, tema...) ---------- */
+
+[data-testid="stButtonGroup"] [role="radiogroup"],
+[data-testid="stButtonGroup"] [role="group"] {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 3px;
+}
+button[data-variant="segmented_control"] {
+    background: transparent !important;
+    color: var(--text-muted) !important;
+    border-radius: 9px !important;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+button[data-variant="segmented_control"] * { color: inherit !important; }
+button[data-variant="segmented_control"][aria-checked="false"]:hover {
+    background: var(--accent-soft) !important;
+    color: var(--text) !important;
+}
+button[data-variant="segmented_control"][aria-checked="true"] {
+    background: var(--accent) !important;
+    color: var(--text-on-accent) !important;
+    font-weight: 700 !important;
+}
+
+/* La barra de Navegación es la única con muchas opciones (7, 8 con
+   Administración) — de ancho fijo por opción (flex normal, como el resto
+   de segmented_control de la app), acaba envolviendo en varias filas
+   cuando no caben todas, y por defecto cada fila se estira para rellenar
+   el ancho disponible: la última fila (con menos botones) queda con esos
+   botones mucho más anchos que los de las filas de arriba — desigual y
+   poco cuidado, tanto en escritorio (ej. 5 arriba + 2 abajo estirados a
+   la mitad cada uno) como, más aún, en móvil (varias filas de 2).
+   Se identifica por su aria-label ("Navegación", el label del widget)
+   para no afectar a los demás segmented_control (Tema, Modo de
+   generación, Formato...) que sí deben seguir estirándose al ancho del
+   contenedor al tener solo 2-3 opciones.
+   Con grid + auto-fill todas las filas usan el mismo número de columnas
+   (calculado según el ancho disponible) y una fila incompleta simplemente
+   deja hueco a la derecha en vez de estirar sus botones — incluida la
+   franja "Administración" cuando queda sola. minmax() se ajusta más abajo
+   en el breakpoint de móvil, donde columnas de 150px no caben. */
+[role="radiogroup"][aria-label="Navegación"] {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 4px;
+}
+[role="radiogroup"][aria-label="Navegación"] button[data-variant="segmented_control"] {
+    width: 100%;
+}
+/* Etiquetas largas ("Generación diaria") cortadas con "…" en columnas
+   estrechas — se deja el texto envolver en dos líneas en vez de
+   truncarlo (min-height, no height: el botón crece si hace falta, y con
+   él el resto de su fila, gracias al "stretch" por defecto del grid). */
+[role="radiogroup"][aria-label="Navegación"] button[data-variant="segmented_control"] p {
+    white-space: normal !important;
+    text-overflow: clip !important;
+    text-align: center;
+    line-height: 1.25;
+    overflow-wrap: normal;
+    word-break: normal;
+}
+
+/* ---------- Badges (st.badge) ---------- */
+
+.stMarkdownBadge {
+    background: var(--accent-soft) !important;
+    color: var(--text) !important;
+    border: 1px solid var(--accent-soft-border) !important;
+    border-radius: 8px !important;
+    padding: 3px 10px !important;
+}
+
+/* ---------- Métricas ---------- */
+
+[data-testid="stMetricValue"] { color: var(--accent) !important; font-weight: 800 !important; }
+[data-testid="stMetricLabel"] { color: var(--text-muted) !important; }
+
+/* ---------- Alertas (st.warning / error / success / info) ---------- */
+
+[data-testid="stAlertContentWarning"] { background: var(--warning-bg) !important; }
+[data-testid="stAlertContentWarning"] * { color: var(--warning) !important; }
+[data-testid="stAlertContentError"] { background: var(--error-bg) !important; }
+[data-testid="stAlertContentError"] * { color: var(--error) !important; }
+[data-testid="stAlertContentSuccess"] { background: var(--success-bg) !important; }
+[data-testid="stAlertContentSuccess"] * { color: var(--success) !important; }
+[data-testid="stAlertContentInfo"] { background: var(--info-bg) !important; }
+[data-testid="stAlertContentInfo"] * { color: var(--info) !important; }
+[data-testid^="stAlertContent"] code {
+    background: rgba(127, 127, 127, 0.18) !important;
+    color: inherit !important;
+}
+
+/* ---------- Expanders ---------- */
+
+[data-testid="stExpander"] {
+    background: var(--bg2) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 12px !important;
+}
+[data-testid="stExpander"] summary { color: var(--text) !important; }
+
+/* ---------- Cabecera (hero banner) ---------- */
+
+.hero-banner {
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
+    padding: 28px 32px;
+    border-radius: 20px;
+    color: var(--text-on-accent) !important;
+    margin-bottom: 18px;
+    box-shadow: 0 10px 30px var(--shadow);
+    position: relative;
+    overflow: hidden;
+}
+.hero-banner::after {
+    content: "";
+    position: absolute; top: -40%; right: -8%;
+    width: 260px; height: 260px; border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+}
+.hero-banner * { color: var(--text-on-accent) !important; position: relative; }
+.hero-banner h1 {
+    margin: 0; font-size: 1.55rem; font-weight: 800; letter-spacing: -0.02em;
+    display: flex; align-items: center; gap: 10px;
+}
+.hero-banner h1 .hero-logo-img {
+    height: 1.7rem; width: 1.7rem; object-fit: cover; border-radius: 8px;
+    display: inline-block; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18); flex-shrink: 0;
+}
+.hero-banner p { margin: 8px 0 0 0; opacity: 0.92; font-size: 0.94rem; max-width: 640px; }
+
+/* ---------- Cabecera compacta de página (V5.6) ---------- */
+
+/* Sustituye al hero grande en las páginas de la app ya autenticada — un
+   icono + título + descripción de una línea, distinto por página (ver
+   PAGINA_HEADERS en app.py), en vez de repetir el mismo mensaje de
+   marketing seis veces. Mucho más plano que .hero-banner a propósito:
+   aquí el usuario ya sabe qué app es (lo lleva la barra lateral todo el
+   rato), esto es solo orientación de "dónde estoy ahora". */
+.page-header {
+    display: flex; align-items: center; gap: 14px;
+    padding-bottom: 14px; margin-bottom: 18px;
+    border-bottom: 1px solid var(--border);
+}
+.page-header .page-header-icon {
+    width: 42px; height: 42px; border-radius: 12px; flex-shrink: 0;
+    background: var(--accent-soft); border: 1px solid var(--accent-soft-border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.3rem; overflow: hidden;
+}
+.page-header .page-header-icon .page-header-logo-img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+}
+.page-header .page-header-text { line-height: 1.3; }
+.page-header .page-header-title {
+    font-weight: 800; font-size: 1.25rem; color: var(--text) !important; letter-spacing: -0.01em;
+}
+.page-header .page-header-sub { font-size: 0.85rem; color: var(--text-muted) !important; margin-top: 1px; }
+
+@media (max-width: 640px) {
+    .page-header { gap: 10px; padding-bottom: 10px; margin-bottom: 14px; }
+    .page-header .page-header-icon { width: 36px; height: 36px; font-size: 1.1rem; border-radius: 10px; }
+    .page-header .page-header-title { font-size: 1.05rem; }
+    .page-header .page-header-sub { font-size: 0.78rem; }
+}
+
+/* ---------- Vista previa de LinkedIn ---------- */
+
+.li-preview-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 18px 20px 14px 20px;
+    box-shadow: 0 2px 14px var(--shadow);
+    max-width: 560px;
+    margin: 4px auto 18px auto;
+}
+.li-preview-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.li-avatar {
+    width: 46px; height: 46px; min-width: 46px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    color: var(--text-on-accent); display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 0.95rem; flex-shrink: 0;
+}
+.li-name { font-weight: 700; font-size: 0.95rem; color: var(--text) !important; line-height: 1.25; }
+.li-headline { font-size: 0.8rem; color: var(--text-muted) !important; line-height: 1.3; }
+.li-meta { font-size: 0.75rem; color: var(--text-muted) !important; margin-top: 1px; }
+.li-preview-text {
+    font-size: 0.92rem; color: var(--text) !important; white-space: pre-wrap;
+    line-height: 1.55; margin-bottom: 12px; word-wrap: break-word;
+}
+.li-hashtag { color: var(--accent) !important; font-weight: 600; }
+.li-preview-img { width: 100%; border-radius: 10px; margin-bottom: 12px; display: block; }
+.li-preview-actions {
+    display: flex; justify-content: space-between; border-top: 1px solid var(--border);
+    padding-top: 10px; font-size: 0.78rem; color: var(--text-muted) !important; font-weight: 600;
+}
+.li-preview-label {
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--text-muted) !important; margin-bottom: 6px;
+}
+
+/* ---------- Insignias de estado (📅 Generación diaria, tarjetas planas) ---------- */
+
+.status-pill {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.02em;
+    padding: 3px 10px; border-radius: 999px;
+}
+.status-pill--pendiente { background: var(--accent-soft); color: var(--text-muted); }
+.status-pill--generado { background: var(--info-bg); color: var(--info); }
+.status-pill--publicado { background: var(--success-bg); color: var(--success); }
+.status-pill--error { background: var(--error-bg); color: var(--error); }
+
+/* ---------- Tarjeta de credenciales de LinkedIn ---------- */
+
+.creds-hint {
+    font-size: 0.82rem; color: var(--text-muted); line-height: 1.5;
+    background: var(--bg3); border: 1px dashed var(--border-strong);
+    border-radius: 10px; padding: 10px 14px; margin-bottom: 10px;
+}
+
+/* ---------- Enlace al panel administrativo (barra lateral) ---------- */
+
+.admin-link {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 0.78rem; font-weight: 600; color: var(--text-muted) !important;
+    text-decoration: none; padding: 6px 0;
+}
+.admin-link:hover { color: var(--accent) !important; }
+
+/* ---------- Responsive / móvil ---------- */
+
+/* Streamlit ya apila en vertical sus propias columnas (st.columns) y
+   colapsa la barra lateral por defecto por debajo de este ancho — lo de
+   aquí son solo los ajustes de espaciado y tamaño que sí dependían del
+   CSS propio de la app. */
+@media (max-width: 640px) {
+    /* Columnas de 150px no caben ni de dos en móvil estrecho: se reduce
+       el mínimo para que quepan 2-3 por fila en vez de 1-2, ahorrando
+       varias filas de alto solo para la navegación. */
+    [role="radiogroup"][aria-label="Navegación"] {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 3px;
+    }
+    [role="radiogroup"][aria-label="Navegación"] button[data-variant="segmented_control"] {
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+        font-size: 0.85rem;
+    }
+
+    /* La cabecera ocupa demasiada altura de pantalla en móvil para lo que
+       aporta — se reduce su padding y el tamaño de letra del título. */
+    .hero-banner { padding: 18px 20px; border-radius: 16px; }
+    .hero-banner h1 { font-size: 1.25rem; }
+    .hero-banner p { font-size: 0.86rem; }
+
+    /* La tarjeta de vista previa de LinkedIn pierde el margen lateral
+       automático (pensado para centrarla en pantallas anchas) y usa todo
+       el ancho disponible, con menos relleno interno. */
+    .li-preview-card { margin: 4px 0 14px 0; padding: 14px 16px 12px 16px; }
+}

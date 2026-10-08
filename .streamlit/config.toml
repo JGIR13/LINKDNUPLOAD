@@ -1,0 +1,27 @@
+[theme]
+# Base de Streamlit para el modo claro por defecto (gris claro + azul
+# LinkedIn — V5.6, a juego con el logo). El modo oscuro (negro + azul) se
+# aplica encima con CSS inyectado desde app.py (el toggle 🌙/☀️ de la barra
+# lateral), porque Streamlit no soporta dos temas simultáneos vía
+# config.toml — ver static/css/theme_claro.css / theme_oscuro.css, que son
+# la fuente de verdad real de los colores (este bloque solo cubre los
+# widgets nativos de Streamlit antes de que el CSS propio se inyecte).
+base = "light"
+primaryColor = "#0A66C2"
+backgroundColor = "#F1F3F6"
+secondaryBackgroundColor = "#FFFFFF"
+textColor = "#16213E"
+font = "sans serif"
+baseRadius = "large"
+
+[server]
+enableStaticServing = false
+
+[browser]
+gatherUsageStats = false
+
+[client]
+# App 100% local de un solo usuario: el botón "Deploy" y el menú de "..."
+# que Streamlit añade por defecto no aplican aquí y solo confundían (no es
+# un despliegue real, ni falta configurar nada) — "minimal" los oculta.
+toolbarMode = "minimal"

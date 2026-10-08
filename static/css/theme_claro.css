@@ -1,0 +1,48 @@
+/*
+ * Tema CLARO — gris claro + azul LinkedIn.
+ *
+ * V5.6: el acento pasó de azul navy (#1B2A4E) al azul de marca del logo
+ * (#0A66C2 — el mismo "Azul corporativo" que ya usaba por defecto la
+ * infografía, ver config.INFOGRAFIA_PALETAS) para que la app entera use el
+ * blanco+azul del logo, no solo el material generado.
+ *
+ * Este archivo solo define los COLORES (variables CSS). La estructura y el
+ * comportamiento de cada elemento vive en base.css, que es el mismo para
+ * los dos temas. Para cambiar el aspecto de la app en modo claro, edita
+ * solo los valores de aquí abajo — no hace falta tocar Python ni reiniciar
+ * el servidor, basta con guardar el archivo y recargar/interactuar con la
+ * app en el navegador.
+ */
+:root {
+    --bg: #F1F3F6;            /* fondo general de la app */
+    --bg2: #FFFFFF;           /* fondo de tarjetas/inputs */
+    --bg3: #E7EBF2;           /* fondo de la barra lateral */
+    --bg-elevated: #FFFFFF;   /* menús desplegables, popovers */
+
+    --text: #16213E;          /* texto principal */
+    --text-muted: #5B6B85;    /* texto secundario / captions */
+    --text-on-accent: #FFFFFF;/* texto sobre superficies de acento */
+
+    --accent: #0A66C2;        /* azul LinkedIn — color principal (igual que el logo) */
+    --accent-2: #2E8BDB;      /* azul más claro (degradados) */
+    --accent-soft: rgba(10, 102, 194, 0.10);   /* fondo suave del acento (pills, hover) */
+    --accent-soft-border: rgba(10, 102, 194, 0.22);
+
+    --border: #D8DEE9;
+    --border-strong: #B9C3D6;
+    --shadow: rgba(10, 102, 194, 0.12);
+
+    --success: #1E7A4C;
+    --success-bg: #E5F5EC;
+    --warning: #92620A;
+    --warning-bg: #FBF0DA;
+    --error: #A32E2E;
+    --error-bg: #FBE7E7;
+    --info: #1B4E7A;
+    --info-bg: #E4EEF7;
+
+    --code-bg: #E7EBF2;
+    --code-text: #0A66C2;
+
+    --scrollbar-thumb: #C3CCDC;
+}

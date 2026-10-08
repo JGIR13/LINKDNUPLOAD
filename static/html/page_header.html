@@ -1,0 +1,16 @@
+<!--
+    Cabecera compacta de cada página de la app, una vez autenticado —
+    icono + título + descripción de una línea. Sustituye al hero grande
+    (static/html/hero_banner.html, que desde la V5.6 solo aparece en la
+    pantalla de login) para que cada página se identifique por lo que
+    hace en ese momento, en vez de repetir el mismo mensaje de marketing
+    en las seis páginas de la navegación. El estilo vive en
+    static/css/base.css (busca ".page-header").
+-->
+<div class="page-header">
+    <div class="page-header-icon">{{icono}}</div>
+    <div class="page-header-text">
+        <div class="page-header-title">{{titulo}}</div>
+        <div class="page-header-sub">{{descripcion}}</div>
+    </div>
+</div>

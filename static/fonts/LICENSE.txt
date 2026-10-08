@@ -1,0 +1,7 @@
+Fonts: DejaVu Sans / DejaVu Sans Bold
+Fuente: https://dejavu-fonts.github.io/
+
+Licencia libre (basada en la Bitstream Vera License), permite uso, copia,
+modificación y redistribución, incluso embebida en otro software, sin coste
+ni atribución obligatoria más allá de conservar este aviso. Texto completo:
+https://dejavu-fonts.github.io/License.html

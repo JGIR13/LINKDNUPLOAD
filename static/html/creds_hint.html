@@ -1,0 +1,19 @@
+<!--
+    Caja de ayuda en la página 🔗 LinkedIn, paso 1 (crear la app de
+    LinkedIn). El hueco entre llaves dobles junto al <code> de abajo lo
+    rellena la app con la URL real de esta instalación — el resto del
+    texto/enlaces lo puedes editar tú. Estilo en static/css/base.css
+    (busca ".creds-hint").
+-->
+<div class="creds-hint">
+¿No tienes una app de LinkedIn todavía? Créala gratis en
+<a href="https://www.linkedin.com/developers/apps" target="_blank">linkedin.com/developers/apps</a>,
+copia su <b>Client ID</b> y <b>Client Secret</b> (pestaña "Auth") y añade esta URL exacta
+en "Authorized redirect URLs for your app": <code>{{redirect_uri}}</code>.
+En la pestaña "Products" añade <b>los dos</b> productos siguientes — si falta
+cualquiera de los dos, LinkedIn rechaza la conexión con una pantalla de error
+genérica sin explicar el motivo: <b>"Sign In with LinkedIn using OpenID Connect"</b>
+(necesario para identificar al usuario) y <b>"Share on LinkedIn"</b> (necesario
+para publicar en su nombre). Ambos deben aparecer como "Added", no como
+"Request access" pendiente.
+</div>

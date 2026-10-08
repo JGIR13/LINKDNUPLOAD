@@ -1,0 +1,10 @@
+.env
+data/*.db
+data/*.sqlite3
+logs/*.log
+static/generated/
+static/inspiracion/
+static/perfil/
+__pycache__/
+*.pyc
+.venv/

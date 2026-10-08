@@ -1,0 +1,45 @@
+/*
+ * Tema OSCURO — negro + azul LinkedIn.
+ *
+ * V5.6: el acento pasó de amarillo (#FFC72C) a un azul brillante a juego
+ * con el logo y con el nuevo acento del tema claro (theme_claro.css) — la
+ * app usa el mismo azul de marca en los dos modos, en vez de dos
+ * identidades de color distintas.
+ *
+ * Mismo formato que theme_claro.css (ver ese archivo para la explicación
+ * general). Cambia estos valores para ajustar el modo oscuro sin tocar
+ * Python ni reiniciar el servidor.
+ */
+:root {
+    --bg: #0B0B0D;
+    --bg2: #17171A;
+    --bg3: #131315;
+    --bg-elevated: #1D1D21;
+
+    --text: #F5F5F0;
+    --text-muted: #B8B8BD;
+    --text-on-accent: #FFFFFF;
+
+    --accent: #4DA6FF;
+    --accent-2: #7EC4FF;
+    --accent-soft: rgba(77, 166, 255, 0.14);
+    --accent-soft-border: rgba(77, 166, 255, 0.35);
+
+    --border: #2A2A2E;
+    --border-strong: #3D3D42;
+    --shadow: rgba(77, 166, 255, 0.12);
+
+    --success: #4ADE80;
+    --success-bg: #16321F;
+    --warning: #FFC72C;
+    --warning-bg: #332A0C;
+    --error: #F87171;
+    --error-bg: #3A1717;
+    --info: #7DD3FC;
+    --info-bg: #102534;
+
+    --code-bg: #232327;
+    --code-text: #7EC4FF;
+
+    --scrollbar-thumb: #3D3D42;
+}

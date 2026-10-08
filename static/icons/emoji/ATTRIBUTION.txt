@@ -1,0 +1,9 @@
+Iconos emoji usados en el formato "Infografía de lista" (image_infografia.py):
+
+Twemoji — Copyright 2020 Twitter, Inc and other contributors
+Código: MIT License
+Gráficos: CC-BY 4.0 (https://creativecommons.org/licenses/by/4.0/)
+Fuente: https://github.com/jdecked/twemoji
+
+Iconos descargados: assets/72x72/*.png (subconjunto curado, ver
+image_infografia.py -> ICONOS)
